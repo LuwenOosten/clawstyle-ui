@@ -45,8 +45,8 @@ Steps
    - command -v hermes
    - whether ports 9119 and 9130 are already in use
 2. Get the frontend (skip if you already have the checkout):
-   git clone https://github.com/LuwenOosten/clawstyle-ui.git
-   cd clawstyle-ui
+   git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+   cd hermes-clawstyle-ui
 3. Install dependencies:
    npm ci
    If the npm version is outside the supported range, use: npx npm@11.17.0 ci
@@ -97,8 +97,8 @@ configuration to make the frontend work.
 ## Install, start, health check
 
 ```bash
-git clone https://github.com/LuwenOosten/clawstyle-ui.git
-cd clawstyle-ui
+git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+cd hermes-clawstyle-ui
 npm ci
 npm run build
 PORT=9130 HERMES_DASHBOARD_URL=http://127.0.0.1:9119 npm start

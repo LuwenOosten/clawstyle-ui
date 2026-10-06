@@ -24,8 +24,8 @@ reject a configuration where `HERMES_DASHBOARD_URL` points at the frontend's own
 ## 2. Install
 
 ```bash
-git clone https://github.com/LuwenOosten/clawstyle-ui.git
-cd clawstyle-ui
+git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+cd hermes-clawstyle-ui
 npm ci
 ```
 

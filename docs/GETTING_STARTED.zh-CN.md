@@ -22,8 +22,8 @@ ClawStyle UI 只是浏览器前端，**必须有一个正在运行的 Hermes Age
 ## 2. 安装
 
 ```bash
-git clone https://github.com/LuwenOosten/clawstyle-ui.git
-cd clawstyle-ui
+git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+cd hermes-clawstyle-ui
 npm ci
 ```
 

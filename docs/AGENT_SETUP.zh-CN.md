@@ -39,8 +39,8 @@ ClawStyle UI **只是前端**。它需要一个已安装并正在运行的 Herme
    - command -v hermes
    - 端口 9119、9130 是否已被占用
 2. 获取前端（若已有检出可跳过）：
-   git clone https://github.com/LuwenOosten/clawstyle-ui.git
-   cd clawstyle-ui
+   git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+   cd hermes-clawstyle-ui
 3. 安装依赖：
    npm ci
    若 npm 版本不在支持范围，使用：npx npm@11.17.0 ci
@@ -84,8 +84,8 @@ lsof -nP -iTCP:9130 -sTCP:LISTEN 2>/dev/null || true   # 前端端口是否空�
 ## 安装、启动与健康检查
 
 ```bash
-git clone https://github.com/LuwenOosten/clawstyle-ui.git
-cd clawstyle-ui
+git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+cd hermes-clawstyle-ui
 npm ci
 npm run build
 PORT=9130 HERMES_DASHBOARD_URL=http://127.0.0.1:9119 npm start

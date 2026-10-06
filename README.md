@@ -125,8 +125,8 @@ needs.
 ### 2. Get and install the frontend
 
 ```bash
-git clone https://github.com/LuwenOosten/clawstyle-ui.git
-cd clawstyle-ui
+git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+cd hermes-clawstyle-ui
 npm ci
 ```
 

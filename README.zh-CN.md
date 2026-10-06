@@ -111,8 +111,8 @@ hermes dashboard          # 在上游仪表盘 http://127.0.0.1:9119 提供服�
 ### 2. 获取并安装前端
 
 ```bash
-git clone https://github.com/LuwenOosten/clawstyle-ui.git
-cd clawstyle-ui
+git clone https://github.com/LuwenOosten/hermes-clawstyle-ui.git
+cd hermes-clawstyle-ui
 npm ci
 ```
 
