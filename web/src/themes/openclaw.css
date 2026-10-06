@@ -1,0 +1,369 @@
+/* ------------------------------------------------------------------ */
+/* OpenClaw theme — presentation rules the token layer cannot reach.   */
+/*                                                                     */
+/* Everything is gated on `:root[data-dashboard-theme="openclaw"]`, a  */
+/* attribute ThemeProvider rewrites on every theme apply. Switching to */
+/* any other theme drops the attribute, so none of these rules can     */
+/* leak into another theme — no `!important`, no cleanup bookkeeping.  */
+/*                                                                     */
+/* Palette and semantic tokens come from the theme definition in       */
+/* `presets.ts` (`palette` + `colorOverrides`); this file only covers  */
+/* cases where the DS hard-codes utility/selector styling: solid       */
+/* buttons, hover surfaces, floating panels, focus rings, inline code, */
+/* placeholders, selection and scrollbars.                             */
+/* ------------------------------------------------------------------ */
+
+/* Keep native selection on the OpenClaw blue rather than a midground
+   wash; the DS reads `--selection-bg` / `--selection-fg`. */
+:root[data-dashboard-theme="openclaw"] {
+  --selection-bg: #005fcc;
+  --selection-fg: #ffffff;
+
+  /* OpenClaw's translucent scrollbar thumb (`--muted` 32% / 64%). */
+  --oc-scrollbar-thumb: color-mix(in srgb, #8b8b94 32%, transparent);
+  --oc-scrollbar-thumb-hover: color-mix(in srgb, #8b8b94 64%, transparent);
+}
+
+/* Readable system typography. The DS display/label utilities read
+   `--font-rules-expanded` / `--font-mondwest`; the brand webfonts behind
+   those names are not bundled (see docs/ATTRIBUTION.md), and index.css
+   already remaps them to the theme stacks for every theme. This block keeps
+   the display slot on `--theme-font-display` under OpenClaw so H1s and form
+   labels follow the active theme (and the user's font override).
+   `.font-courier` / `.font-mono` keep the mono stack for code, ids and the
+   terminal pane. */
+:root[data-dashboard-theme="openclaw"] {
+  --font-rules-expanded: var(--theme-font-display);
+  --font-rules-compressed: var(--theme-font-display);
+  --font-mondwest: var(--theme-font-sans);
+}
+
+/* The Mondwest label/eyebrow stack pairs wide HUD tracking with the display
+   face. On a readable sans that spacing reads as broken, so cap it; the
+   `.text-display` uppercase + 0.05em rhythm still applies elsewhere. Sizes,
+   gaps and grid are untouched. */
+:root[data-dashboard-theme="openclaw"] .font-mondwest {
+  letter-spacing: 0.02em;
+}
+
+/* Modal titles and section labels that use the Mondwest display pair drop
+   the all-caps; sentence case is the readable OpenClaw title treatment.
+   (Buttons and segmented labels are already handled by their own rules.) */
+:root[data-dashboard-theme="openclaw"] .font-mondwest.text-display {
+  text-transform: none;
+  font-weight: 600;
+}
+
+/* Destructive has two roles in the OpenClaw palette: the darker #d32f2f is
+   the filled-button surface (white ink, AA), while error *text* uses the
+   brighter --danger tone. The fill/ink pair comes from colorOverrides;
+   this only splits the text utility off it. */
+:root[data-dashboard-theme="openclaw"] .text-destructive,
+:root[data-dashboard-theme="openclaw"] .hover\:text-destructive:hover {
+  color: var(--theme-color-text-danger, #f87171);
+}
+:root[data-dashboard-theme="openclaw"] .text-destructive\/70 {
+  color: color-mix(in srgb, var(--theme-color-text-danger, #f87171) 70%, transparent);
+}
+
+/* OpenClaw's selection is blue with white ink. The DS base rule paints
+   selected text with `var(--background)` (fine on a cream midground, dark
+   on blue), so the ink is set explicitly here. `code` keeps its own chip
+   styling from the rule below. */
+:root[data-dashboard-theme="openclaw"] ::selection {
+  background: var(--selection-bg, #005fcc);
+  color: var(--selection-fg, #ffffff);
+}
+
+/* Links, spinners and active glyphs read as the coral signature accent.
+   `--theme-color-primary` stays the darker #d13c3c because filled primary
+   buttons need white ink at AA contrast, which coral does not reach. */
+:root[data-dashboard-theme="openclaw"] .text-primary,
+:root[data-dashboard-theme="openclaw"] .text-primary\/90 {
+  color: var(--theme-color-text-accent, #ff5c5c);
+}
+
+/* ================================================================== */
+/* Controls (OpenClaw `.btn`)                                           */
+/* ================================================================== */
+
+/* The DS button is `font-mono text-display tracking-[0.2em] font-bold`
+   with em-tall padding, an inset bevel and an `active:invert` press. The
+   OpenClaw reference is 13px medium system sans, natural case, 8px radius,
+   flat surfaces and real hover/pressed/disabled states. */
+:root[data-dashboard-theme="openclaw"] button[class*="disabled:bg-midground/15"] {
+  font-family: var(--theme-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+  border-radius: 8px;
+  /* Zero the shadow variables instead of `box-shadow`: the focus-visible
+     ring is composed from --tw-ring-shadow and must keep working. */
+  --tw-shadow: 0 0 #0000;
+  --tw-inset-shadow: 0 0 #0000;
+}
+
+:root[data-dashboard-theme="openclaw"] button[class*="disabled:bg-midground/15"]:active {
+  filter: none;
+}
+
+/* Plain dashboard buttons that still carry the HUD `text-display` style
+   (sidebar system actions, language options): same readable treatment.
+   The DS Button never matches here — tailwind-merge drops `text-display`
+   when the variant's text colour is merged in, which is why the DS hook
+   above is class-substring based. */
+:root[data-dashboard-theme="openclaw"] button.text-display {
+  font-family: var(--theme-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Compact buttons keep the OpenClaw `.btn--sm` size (12px) instead of
+   inheriting the 13px default. */
+:root[data-dashboard-theme="openclaw"] button[class*="disabled:bg-midground/15"][class*="text-[0.7rem]"] {
+  font-size: 12px;
+}
+
+/* Default-size buttons take the reference padding; icon/compact (sm/xs)
+   sizes keep their own padding so inline controls are not inflated. */
+:root[data-dashboard-theme="openclaw"] button[class*="disabled:bg-midground/15"][class*="py-[1.25em]"] {
+  padding: 8px 14px;
+}
+
+/* Primary: the solid DS variant (`bg-midground text-background-base`).
+   The `.text-background-base` guard keeps the Segmented active segment
+   (`bg-midground text-background`) out of the primary treatment. */
+:root[data-dashboard-theme="openclaw"] button.bg-midground.text-background-base:not(:disabled) {
+  background-color: var(--theme-color-primary, #d13c3c);
+  color: var(--theme-color-primary-foreground, #ffffff);
+}
+:root[data-dashboard-theme="openclaw"] button.bg-midground.text-background-base:not(:disabled):hover {
+  background-color: #c22e2e;
+}
+:root[data-dashboard-theme="openclaw"] button.bg-midground.text-background-base:not(:disabled):active {
+  background-color: #a82525;
+}
+
+/* Secondary: the DS `outlined` variant is a transparent bevel shell; make
+   it a raised dark surface with the OpenClaw hairline and hover plane. */
+:root[data-dashboard-theme="openclaw"] button[class*="disabled:bg-midground/15"].shadow-midground:not(:disabled) {
+  background-color: var(--theme-color-popover, #191c24);
+  border: 1px solid var(--theme-color-border, #1e2028);
+  color: var(--theme-color-text-secondary, #bcbcc0);
+}
+:root[data-dashboard-theme="openclaw"] button[class*="disabled:bg-midground/15"].shadow-midground:not(:disabled):hover {
+  background-color: var(--theme-color-muted, #1f2330);
+  border-color: #2e3040;
+  color: var(--theme-color-text-primary, #f4f4f5);
+}
+
+/* Disabled (every size): muted fill + disabled ink instead of the bright
+   midground wash that reads as an active control on charcoal. */
+:root[data-dashboard-theme="openclaw"] button[class*="disabled:bg-midground/15"]:disabled {
+  background-color: color-mix(in srgb, var(--theme-color-muted, #1f2330) 65%, transparent);
+  color: var(--theme-color-text-disabled, #6e6e77);
+}
+
+/* Badges: the DS compressed display face + 0.2em tracking is HUD lettering;
+   keep the chip, make the label readable. */
+:root[data-dashboard-theme="openclaw"] .font-compressed.text-display {
+  font-family: var(--theme-font-sans);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* ================================================================== */
+/* Forms                                                               */
+/* ================================================================== */
+
+/* Editable controls: system sans at a readable size, 8px radius, 36px
+   single-line height, card-dark surface and a clear hover/focus.
+   Explicit mono opt-ins (cron expressions, YAML/skill editors, ids) and
+   the xterm helper textarea are excluded, not overridden. */
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="image"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not(.font-mono):not(.font-courier),
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input)[class*="placeholder:text-midground/50"],
+:root[data-dashboard-theme="openclaw"] textarea:not(.ui-textarea):not(.xterm-helper-textarea):not(.font-mono):not(.font-courier),
+:root[data-dashboard-theme="openclaw"] select:not(.ui-select):not(.font-mono):not(.font-courier),
+:root[data-dashboard-theme="openclaw"] button[role="combobox"] {
+  font-family: var(--theme-font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  border-radius: 8px;
+  border-color: var(--theme-color-input, #1e2028);
+  background-color: #13151b;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="image"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not(.font-mono):not(.font-courier),
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input)[class*="placeholder:text-midground/50"],
+:root[data-dashboard-theme="openclaw"] button[role="combobox"] {
+  height: 36px;
+  padding: 0 12px;
+}
+
+:root[data-dashboard-theme="openclaw"] textarea:not(.ui-textarea):not(.xterm-helper-textarea):not(.font-mono):not(.font-courier) {
+  padding: 8px 12px;
+}
+
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="image"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not(.font-mono):not(.font-courier):hover,
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input)[class*="placeholder:text-midground/50"]:hover,
+:root[data-dashboard-theme="openclaw"] textarea:not(.ui-textarea):not(.xterm-helper-textarea):not(.font-mono):not(.font-courier):hover,
+:root[data-dashboard-theme="openclaw"] select:not(.ui-select):not(.font-mono):not(.font-courier):hover,
+:root[data-dashboard-theme="openclaw"] button[role="combobox"]:hover {
+  border-color: #2e3040;
+}
+
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input):not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="image"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not(.font-mono):not(.font-courier):focus-visible,
+:root[data-dashboard-theme="openclaw"] input:not(.ui-input)[class*="placeholder:text-midground/50"]:focus-visible,
+:root[data-dashboard-theme="openclaw"] textarea:not(.ui-textarea):not(.xterm-helper-textarea):not(.font-mono):not(.font-courier):focus-visible,
+:root[data-dashboard-theme="openclaw"] select:not(.ui-select):not(.font-mono):not(.font-courier):focus-visible,
+:root[data-dashboard-theme="openclaw"] button[role="combobox"]:focus-visible {
+  border-color: var(--theme-color-ring, #ff5c5c);
+}
+
+/* Field labels: the DS label is the Mondwest pixel face with 0.1em
+   tracking and uppercase; edit forms read as 13px medium sentence case. */
+:root[data-dashboard-theme="openclaw"] label {
+  font-family: var(--theme-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.35;
+}
+
+/* ================================================================== */
+/* Filters and compact selection controls                              */
+/* ================================================================== */
+
+/* Segmented filters (role="radiogroup"): rounded group, readable neutral
+   active segment instead of the midground (near-white) fill. */
+:root[data-dashboard-theme="openclaw"] [role="radiogroup"] {
+  border-radius: 8px;
+  border-color: var(--theme-color-border, #1e2028);
+  background-color: #13151b;
+  overflow: hidden;
+}
+:root[data-dashboard-theme="openclaw"] [role="radiogroup"] > button {
+  font-family: var(--theme-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  padding-inline: 12px;
+}
+:root[data-dashboard-theme="openclaw"] [role="radiogroup"] > button[aria-checked="true"] {
+  background-color: var(--theme-color-muted, #1f2330);
+  color: var(--theme-color-text-primary, #f4f4f5);
+}
+:root[data-dashboard-theme="openclaw"] [role="radiogroup"] > button[aria-checked="false"]:hover {
+  background-color: color-mix(in srgb, var(--theme-color-muted, #1f2330) 55%, transparent);
+  color: var(--theme-color-text-primary, #f4f4f5);
+}
+
+/* Menu/filter rows (DS `ListItem` renders a button with `font-courier
+   text-left`): readable sans 13px and rounded row corners. The Select
+   trigger is excluded here because the form section styles it as a field. */
+:root[data-dashboard-theme="openclaw"] button.font-courier.text-left:not([role="combobox"]) {
+  font-family: var(--theme-font-sans);
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+/* ================================================================== */
+/* Dialog shells                                                       */
+/* ================================================================== */
+
+/* Dashboard-owned modals (`@/ui/Modal`) bring their own frame and radius.
+   What remains here is the DS-drawn dialogs (Radix Dialog / alertdialog)
+   that untouched surfaces still use. */
+:root[data-dashboard-theme="openclaw"] [data-slot="dialog-content"],
+:root[data-dashboard-theme="openclaw"] [role="alertdialog"] {
+  border-radius: 12px;
+}
+
+/* Ghost-button and list-row hover settle on OpenClaw's `--bg-hover`
+   instead of a white wash derived from the (light) midground. */
+:root[data-dashboard-theme="openclaw"] .hover\:bg-midground\/5:hover,
+:root[data-dashboard-theme="openclaw"] .hover\:bg-midground\/10:hover {
+  background-color: var(--theme-color-muted, #1f2330);
+}
+
+/* DS ListItem marks its selected row with `data-active`; the OpenClaw
+   selection idiom is a subtle accent wash, distinct from the neutral hover
+   plane the rows already use. */
+:root[data-dashboard-theme="openclaw"] [data-active] {
+  background-color: color-mix(in srgb, var(--theme-color-text-accent, #ff5c5c) 12%, transparent);
+}
+
+/* DS cards/panels draw their hairline with `border-midground/15`; unify on
+   the darker OpenClaw border instead of a white wash. */
+:root[data-dashboard-theme="openclaw"] .border-midground\/15 {
+  border-color: var(--theme-color-border, #1e2028);
+}
+
+/* Floating surfaces the DS paints with `bg-background-base` (dialogs,
+   alert dialogs, select listboxes, theme/language menus). */
+:root[data-dashboard-theme="openclaw"] [data-slot="dialog-content"],
+:root[data-dashboard-theme="openclaw"] [role="alertdialog"],
+:root[data-dashboard-theme="openclaw"] [role="listbox"] {
+  background-color: var(--theme-color-popover, #191c24);
+}
+
+/* Inline `code` is a quiet raised chip. Without this the DS paints it with
+   the midground (#f4f4f5) — a near-white block on the charcoal canvas.
+   Markdown code blocks carry explicit `bg-secondary/60` utilities and are
+   unaffected. */
+:root[data-dashboard-theme="openclaw"] code {
+  background: var(--theme-color-card, #161920);
+  color: var(--theme-color-text-primary, #f4f4f5);
+}
+
+/* Placeholders stay quieter than body copy. */
+:root[data-dashboard-theme="openclaw"] ::placeholder {
+  color: var(--theme-color-text-tertiary, #8b8b94);
+}
+
+/* Focus follows the coral accent everywhere: Tailwind ring utilities read
+   `--tw-ring-color`, and native outlines get the matching colour. */
+:root[data-dashboard-theme="openclaw"] :focus-visible {
+  --tw-ring-color: var(--theme-color-ring, #ff5c5c);
+  outline-color: var(--theme-color-ring, #ff5c5c);
+}
+
+/* OpenClaw scrollbars: a translucent thumb that strengthens on hover. */
+:root[data-dashboard-theme="openclaw"] * {
+  scrollbar-color: var(--oc-scrollbar-thumb) transparent;
+}
+:root[data-dashboard-theme="openclaw"] *:hover,
+:root[data-dashboard-theme="openclaw"] *:focus-within {
+  scrollbar-color: var(--oc-scrollbar-thumb-hover) transparent;
+}
+:root[data-dashboard-theme="openclaw"] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+:root[data-dashboard-theme="openclaw"] ::-webkit-scrollbar-track,
+:root[data-dashboard-theme="openclaw"] ::-webkit-scrollbar-corner,
+:root[data-dashboard-theme="openclaw"] ::-webkit-scrollbar-button {
+  background: transparent;
+}
+:root[data-dashboard-theme="openclaw"] ::-webkit-scrollbar-thumb {
+  background: var(--oc-scrollbar-thumb);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 9999px;
+}
+:root[data-dashboard-theme="openclaw"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--oc-scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
